@@ -75,7 +75,7 @@ export default async function BlogPage() {
       </div>
 
       <h1 className="text-5xl font-extrabold text-lime-300 mb-12 drop-shadow-2xl text-center">
-        The Myco-Musings Blog
+        A Day in the Life
       </h1>
 
       <section className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
