@@ -114,9 +114,10 @@ export async function generateStaticParams() {
 
 // --- Generate Metadata for individual post (for SEO) ---
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { slug } = params;
   const post = await sanityFetch<Post>({
     query: SINGLE_POST_QUERY,
-    params: { slug: params.slug },
+    params: { slug },
     revalidate: 60, // Revalidate metadata too
   });
 
@@ -130,16 +131,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     openGraph: {
       title: post.title,
       description: post.seoDescription || post.title,
-      images: post.mainImage ? [urlForImage(post.mainImage).width(1200).height(630).url()] : [],
+      images: (post.mainImage && post.mainImage.asset && post.mainImage.asset._ref) ? [urlForImage(post.mainImage).width(1200).height(630).url()] : [],
     },
     // Add more SEO tags as needed
   };
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   const post = await sanityFetch<Post>({
     query: SINGLE_POST_QUERY,
-    params: { slug: params.slug },
+    params: { slug },
     revalidate: 60, // Revalidate every 60 seconds
   });
 
@@ -157,7 +159,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       </div>
 
       <article className="w-full max-w-4xl bg-gray-900/70 p-8 rounded-lg shadow-2xl border-2 border-green-700 backdrop-blur-sm">
-        {post.mainImage && post.mainImage.asset && (
+        {post.mainImage && post.mainImage.asset && post.mainImage.asset._ref && (
           <Image
             src={urlForImage(post.mainImage).width(1000).height(600).url()}
             alt={post.mainImage.alt || post.title}
